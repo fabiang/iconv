@@ -9,6 +9,12 @@ package iconv
 // #include <iconv.h>
 // #include <stdlib.h>
 // #include <errno.h>
+// #include <locale.h>
+//
+// // called by init, seems to be necessary for TRANSLIT to work
+// void initLocale() {
+//	setlocale(LC_ALL, "");
+// }
 //
 // size_t bridge_iconv(iconv_t cd,
 //		       char *inbuf, size_t *inbytesleft,
@@ -28,6 +34,10 @@ var EILSEQ = syscall.Errno(C.EILSEQ)
 var E2BIG = syscall.Errno(C.E2BIG)
 
 const DefaultBufSize = 4096
+
+func init() {
+	C.initLocale()
+}
 
 type Iconv struct {
 	Handle C.iconv_t
